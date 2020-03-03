@@ -1,0 +1,8 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 2 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 3 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 4 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 5 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 6 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 7 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist/filter_dist.py --fdist_indx 8 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/filter_dist
