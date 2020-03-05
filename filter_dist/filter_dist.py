@@ -313,7 +313,6 @@ if __name__ == "__main__":
 
     extra_info['file executed'] = os.path.realpath(__file__)
 
-    footprint = simple_footprint(nside=nside)
     fdist = {1: {'u': 1, 'g': 1, 'r': 1, 'i': 1, 'z': 1, 'y': 1},  # uniform
              2: {'u': 0.31, 'g': 0.44, 'r': 1, 'i': 1, 'z': 0.9, 'y': 0.9},  # classic default
              3: {'u': 0.31, 'g': 1, 'r': 1, 'i': 1, 'z': 0.9, 'y': 0.9},  # g heavy
@@ -323,6 +322,7 @@ if __name__ == "__main__":
              7: {'u': 0.5, 'g': 0.6, 'r': 1, 'i': 1, 'z': 0.9, 'y': 0.9},  # slight bluer
              8: {'u': 0.31, 'g': 0.44, 'r': 1, 'i': 1.1, 'z': 1.1, 'y': 1.1}  # slight redder
              }
+    footprints = simple_footprint(nside=nside, ratios=fdist[fdist_indx])
 
     fileroot = 'filterdist_indx%i_' % fdist_indx
     file_end = 'v1.5_'
@@ -332,8 +332,8 @@ if __name__ == "__main__":
     details = [detailers.Camera_rot_detailer(min_rot=-camera_ddf_rot_limit, max_rot=camera_ddf_rot_limit), dither_detailer]
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp, detailers=details)
 
-    greedy = gen_greedy_surveys(nside, nexp=nexp)
-    blobs = generate_blobs(nside, nexp=nexp)
+    greedy = gen_greedy_surveys(nside, nexp=nexp, footprints=footprints)
+    blobs = generate_blobs(nside, nexp=nexp, footprints=footprints)
     surveys = [blobs, greedy]
     run_sched(surveys, survey_length=survey_length, verbose=verbose,
               fileroot=os.path.join(outDir, fileroot+file_end), extra_info=extra_info,
