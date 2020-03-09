@@ -28,7 +28,7 @@
 
 ## See above section on "Specifying memory" for choices for --mem.
 
-#SBATCH --mem=500G
+#SBATCH --mem=100G
 
 ## Specify the working directory for this job
 
@@ -55,4 +55,4 @@ cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/slurm
 ## run all the baseline commands in parallel
 module load parallel-20170722
 ## only need to do 5 at a time, since there are only that many in the list
-cat run_footprints.script | parallel -j 20
+cat run_footprints.script | parallel -j 5
