@@ -321,7 +321,7 @@ if __name__ == "__main__":
     parser.add_argument("--maxDither", type=float, default=0.7, help="Dither size for DDFs (deg)")
     parser.add_argument("--moon_illum_limit", type=float, default=15., help="illumination limit to remove u-band")
     parser.add_argument("--nham", type=int, default=2)
-    parser.add_argument("--filters", type=str, defualt='ug')
+    parser.add_argument("--filters", type=str, default='ug')
 
     args = parser.parse_args()
     survey_length = args.survey_length  # Days
