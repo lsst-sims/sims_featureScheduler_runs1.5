@@ -252,13 +252,12 @@ def generate_high_am(nside, nexp=1, n_high_am=2, hair_weight=6., pair_time=22.,
                      shadow_minutes=60., max_alt=76., moon_distance=30., ignore_obs='DD',
                      m5_weight=6., footprint_weight=0.6, slewtime_weight=3.,
                      stayfilter_weight=3., template_weight=12., const_weight=1, min_area=288.,
-                     mask_east=True, mask_west=False, survey_name='high_am'):
+                     mask_east=True, mask_west=False, survey_name='high_am', filters='ug'):
     """Let's set this up like the blob, but then give it a little extra weight.
     """
     target_maps = standard_goals(nside=nside)
-    filters = ['u', 'g']
     surveys = []
-    
+
     for filtername in filters:
         survey_name_final = survey_name+', %s' % filtername
         target_map = target_maps[filtername]*0
@@ -321,7 +320,8 @@ if __name__ == "__main__":
     parser.add_argument("--outDir", type=str, default="")
     parser.add_argument("--maxDither", type=float, default=0.7, help="Dither size for DDFs (deg)")
     parser.add_argument("--moon_illum_limit", type=float, default=15., help="illumination limit to remove u-band")
-    parser.add_argument("--nham", type=int, default=3)
+    parser.add_argument("--nham", type=int, default=2)
+    parser.add_argument("--filters", type=str, defualt='ug')
 
     args = parser.parse_args()
     survey_length = args.survey_length  # Days
@@ -330,6 +330,7 @@ if __name__ == "__main__":
     max_dither = args.maxDither
     illum_limit = args.moon_illum_limit
     nham = args.nham
+    filters = args.filters
 
     nside = 32
     per_night = True  # Dither DDF per night
@@ -349,7 +350,7 @@ if __name__ == "__main__":
 
     extra_info['file executed'] = os.path.realpath(__file__)
 
-    fileroot = 'dcr_nham%i_' % nham
+    fileroot = 'dcr_nham%i_%s_' % (nham, filters)
     file_end = 'v1.5_'
 
     # Set up the DDF surveys to dither
