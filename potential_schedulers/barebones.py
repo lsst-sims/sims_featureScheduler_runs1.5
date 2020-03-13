@@ -30,7 +30,7 @@ def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y
                        camera_rot_limits=[-80., 80.],
                        shadow_minutes=60., max_alt=76., moon_distance=30., ignore_obs='DD',
                        m5_weight=3., footprint_weight=0.3, slewtime_weight=3.,
-                       stayfilter_weight=3.):
+                       stayfilter_weight=3., footprints=None):
     """
     Make a quick set of greedy surveys
 
@@ -74,7 +74,8 @@ def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y
                            'seed': 42, 'camera': 'LSST', 'dither': True,
                            'survey_name': 'greedy'}
 
-    footprints = simple_footprint(nside=nside)
+    if footprints is None:
+        footprints = standard_goals(nside=nside)
     sum_footprints = 0
     for key in footprints:
         sum_footprints += np.sum(footprints[key])
@@ -108,13 +109,13 @@ def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y
     return surveys
 
 
-def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'g', 'r', 'i', 'z', 'y'],
-                   filter2s=['g', 'r', 'r', 'i', 'z', 'y', 'y'], pair_time=22.,
+def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'g', 'r', 'i', 'z', 'y'],
+                   filter2s=[None, 'g', 'r', 'i', 'z', None], pair_time=22.,
                    camera_rot_limits=[-80., 80.], n_obs_template=3,
                    season=300., season_start_hour=-4., season_end_hour=2.,
                    shadow_minutes=60., max_alt=76., moon_distance=30., ignore_obs='DD',
                    m5_weight=6., footprint_weight=0.6, slewtime_weight=3.,
-                   stayfilter_weight=3., template_weight=12.):
+                   stayfilter_weight=3., template_weight=12., footprints=None):
     """
     Generate surveys that take observations in blobs.
 
@@ -168,7 +169,8 @@ def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'g', 'r', 'i'
                           'smoothing_kernel': None, 'nside': nside, 'seed': 42, 'dither': True,
                           'twilight_scale': True}
 
-    footprints = simple_footprint(nside=nside)
+    if footprints is None:
+        footprints = standard_goals(nside=nside)
     sum_footprints = 0
     for key in footprints:
         sum_footprints += np.sum(footprints[key])
@@ -310,13 +312,15 @@ if __name__ == "__main__":
     fileroot = 'barebones'
     file_end = 'v1.5_'
 
+    footprints = simple_footprint()
+
     # Set up the DDF surveys to dither
     dither_detailer = detailers.Dither_detailer(per_night=per_night, max_dither=max_dither)
     details = [detailers.Camera_rot_detailer(min_rot=-camera_ddf_rot_limit, max_rot=camera_ddf_rot_limit), dither_detailer]
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp, detailers=details, frac_total=0.0045, aggressive_frac=0.002)
 
-    greedy = gen_greedy_surveys(nside, nexp=nexp)
-    blobs = generate_blobs(nside, nexp=nexp)
+    greedy = gen_greedy_surveys(nside, nexp=nexp, footprints=footprints)
+    blobs = generate_blobs(nside, nexp=nexp, footprints=footprints)
     surveys = [ddfs, blobs, greedy]
     run_sched(surveys, survey_length=survey_length, verbose=verbose,
               fileroot=os.path.join(outDir, fileroot+file_end), extra_info=extra_info,
