@@ -274,6 +274,7 @@ if __name__ == "__main__":
     parser.add_argument("--outDir", type=str, default="")
     parser.add_argument("--maxDither", type=float, default=0.7, help="Dither size for DDFs (deg)")
     parser.add_argument("--moon_illum_limit", type=float, default=40., help="illumination limit to remove u-band")
+    parser.add_argument("--nexp", type=int, default=1)
 
     args = parser.parse_args()
     survey_length = args.survey_length  # Days
@@ -281,10 +282,11 @@ if __name__ == "__main__":
     verbose = args.verbose
     max_dither = args.maxDither
     illum_limit = args.moon_illum_limit
+    nexp = args.nexp
 
     nside = 32
     per_night = True  # Dither DDF per night
-    nexp = 1  # All observations
+
     camera_ddf_rot_limit = 75.
 
     extra_info = {}
@@ -299,7 +301,7 @@ if __name__ == "__main__":
 
     extra_info['file executed'] = os.path.realpath(__file__)
 
-    fileroot = 'baseline_'
+    fileroot = 'baseline_nexp%i_' % nexp
     file_end = 'v1.5_'
 
     # Set up the DDF surveys to dither

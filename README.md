@@ -22,7 +22,7 @@ Only WFD area, minimal DDF cadence. pairs in same filter.
 
 ### Classic Baseline
 
-The lastest iteration of our baseline survey. 
+The lastest iteration of our baseline survey. With 1 and 2 snaps per visit.
 
 ### Rolling Exgal
 
