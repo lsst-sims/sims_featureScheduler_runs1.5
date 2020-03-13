@@ -5,7 +5,7 @@ from lsst.sims.featureScheduler.modelObservatory import Model_observatory
 from lsst.sims.featureScheduler.schedulers import Core_scheduler, simple_filter_sched
 from lsst.sims.featureScheduler.utils import standard_goals, create_season_offset
 import lsst.sims.featureScheduler.basis_functions as bf
-from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_survey,
+from lsst.sims.featureScheduler.surveys import (Greedy_survey,
                                                 Blob_survey)
 from lsst.sims.featureScheduler import sim_runner
 import lsst.sims.featureScheduler.detailers as detailers
@@ -13,13 +13,14 @@ import sys
 import subprocess
 import os
 import argparse
+from ddf_baseline import generate_dd_surveys
 
 
 def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y'],
                        camera_rot_limits=[-80., 80.],
                        shadow_minutes=60., max_alt=76., moon_distance=30., ignore_obs='DD',
                        m5_weight=3., footprint_weight=0.3, slewtime_weight=3.,
-                       stayfilter_weight=3.):
+                       stayfilter_weight=3., footprints=None):
     """
     Make a quick set of greedy surveys
 
@@ -63,13 +64,14 @@ def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y
                            'seed': 42, 'camera': 'LSST', 'dither': True,
                            'survey_name': 'greedy'}
 
-    footprints = standard_goals(nside=nside)
+    if footprints is None:
+        footprints = standard_goals(nside=nside)
     sum_footprints = 0
     for key in footprints:
         sum_footprints += np.sum(footprints[key])
 
     surveys = []
-    detailer = detailers.Camera_rot_detailer(min_rot=np.min(camera_rot_limits), max_rot=np.max(camera_rot_limits))
+    detailer = detailers.Spider_rot_detailer()
 
     for filtername in filters:
         bfs = []
@@ -97,13 +99,15 @@ def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y
     return surveys
 
 
-def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'u', 'g', 'r', 'i', 'z', 'y'],
-                   filter2s=['u', 'g', 'r', 'r', 'i', 'z', 'y', 'y'], pair_time=22.,
+def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'g', 'r', 'i', 'z', 'y'],
+                   filter2s=['g', 'r', 'r', 'i', 'z', 'y', 'y'], pair_time=22.,
                    camera_rot_limits=[-80., 80.], n_obs_template=3,
                    season=300., season_start_hour=-4., season_end_hour=2.,
                    shadow_minutes=60., max_alt=76., moon_distance=30., ignore_obs='DD',
                    m5_weight=6., footprint_weight=0.6, slewtime_weight=3.,
-                   stayfilter_weight=3., template_weight=12.):
+                   stayfilter_weight=3., template_weight=12., footprints=None,
+                   good_seeing_filts=['g', 'r', 'i'], good_seeing_limit=0.7, mag_diff=0.7,
+                   good_seeing_weight=10.):
     """
     Generate surveys that take observations in blobs.
 
@@ -157,7 +161,8 @@ def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'u', 'g', 'r'
                           'smoothing_kernel': None, 'nside': nside, 'seed': 42, 'dither': True,
                           'twilight_scale': True}
 
-    footprints = standard_goals(nside=nside)
+    if footprints is None:
+        footprints = standard_goals(nside=nside)
     sum_footprints = 0
     for key in footprints:
         sum_footprints += np.sum(footprints[key])
@@ -167,8 +172,7 @@ def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'u', 'g', 'r'
     times_needed = [pair_time, pair_time*2]
     for filtername, filtername2 in zip(filter1s, filter2s):
         detailer_list = []
-        detailer_list.append(detailers.Camera_rot_detailer(min_rot=np.min(camera_rot_limits),
-                                                           max_rot=np.max(camera_rot_limits)))
+        detailer_list.append(detailers.Spider_rot_detailer())
         detailer_list.append(detailers.Close_alt_detailer())
         # List to hold tuples of (basis_function_object, weight)
         bfs = []
@@ -197,6 +201,16 @@ def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'u', 'g', 'r'
 
         bfs.append((bf.Slewtime_basis_function(filtername=filtername, nside=nside), slewtime_weight))
         bfs.append((bf.Strict_filter_basis_function(filtername=filtername), stayfilter_weight))
+
+        if (filtername in good_seeing_filts) | (filtername2 in good_seeing_filts):
+            if filtername in good_seeing_filts:
+                fn_matched = filtername
+            else:
+                fn_matched = filtername2
+            bfs.append((bf.Good_seeing_basis_function(filtername=fn_matched,
+                                                      nside=nside,
+                                                      FWHMeff_limit=good_seeing_limit,
+                                                      mag_diff=mag_diff), good_seeing_weight))
 
         if filtername2 is not None:
             bfs.append((bf.N_obs_per_year_basis_function(filtername=filtername, nside=nside,
@@ -263,8 +277,7 @@ def generate_high_am(nside, nexp=1, n_high_am=2, hair_weight=6., pair_time=22.,
         target_map = target_maps[filtername]*0
         target_map[np.where(target_maps[filtername] == np.max(target_maps[filtername]))] = 1.
         detailer_list = []
-        detailer_list.append(detailers.Camera_rot_detailer(min_rot=np.min(camera_rot_limits),
-                                                           max_rot=np.max(camera_rot_limits)))
+        detailer_list.append(detailers.Spider_rot_detailer())
         detailer_list.append(detailers.Close_alt_detailer())
         bfs = []
         bfs.append((bf.M5_diff_basis_function(filtername=filtername, nside=nside), m5_weight))
@@ -297,7 +310,7 @@ def generate_high_am(nside, nexp=1, n_high_am=2, hair_weight=6., pair_time=22.,
 
 
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False,
-              extra_info=None, illum_limit=15.):
+              extra_info=None, illum_limit=40.):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -318,10 +331,11 @@ if __name__ == "__main__":
     parser.set_defaults(verbose=False)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
-    parser.add_argument("--maxDither", type=float, default=0.7, help="Dither size for DDFs (deg)")
-    parser.add_argument("--moon_illum_limit", type=float, default=15., help="illumination limit to remove u-band")
+    parser.add_argument("--maxDither", type=float, default=1.5, help="Dither size for DDFs (deg)")
+    parser.add_argument("--moon_illum_limit", type=float, default=40., help="illumination limit to remove u-band")
+    parser.add_argument("--nexp", type=int, default=1)
     parser.add_argument("--nham", type=int, default=2)
-    parser.add_argument("--filters", type=str, default='ug')
+    parser.add_argument("--filters", type=str, default='ugr')
 
     args = parser.parse_args()
     survey_length = args.survey_length  # Days
@@ -329,13 +343,13 @@ if __name__ == "__main__":
     verbose = args.verbose
     max_dither = args.maxDither
     illum_limit = args.moon_illum_limit
+    nexp = args.nexp
     nham = args.nham
     filters = args.filters
 
     nside = 32
     per_night = True  # Dither DDF per night
-    nexp = 1  # All observations
-    mixed_pairs = True  # For the blob scheduler
+
     camera_ddf_rot_limit = 75.
 
     extra_info = {}
@@ -350,12 +364,12 @@ if __name__ == "__main__":
 
     extra_info['file executed'] = os.path.realpath(__file__)
 
-    fileroot = 'dcr_nham%i_%s_' % (nham, filters)
+    fileroot = 'dm_heavy_'
     file_end = 'v1.5_'
 
     # Set up the DDF surveys to dither
     dither_detailer = detailers.Dither_detailer(per_night=per_night, max_dither=max_dither)
-    details = [detailers.Camera_rot_detailer(min_rot=-camera_ddf_rot_limit, max_rot=camera_ddf_rot_limit), dither_detailer]
+    details = [detailers.Spider_rot_detailer(), dither_detailer]
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp, detailers=details)
 
     greedy = gen_greedy_surveys(nside, nexp=nexp)
