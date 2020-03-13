@@ -16,9 +16,9 @@ Looking at different filter distributions.
 
 ### Bare Bones
 
-This is an intentionally bad simulation, where we meet the SRD requirements, but have not particularly crafted a useful strategy. This is a good example of just how deep the WFD area could possibly get.
+This is an intentionally "bad" simulation, where we only strive to meet the SRD requirements, but have not particularly crafted a useful strategy for science. This is a good example of just how deep the WFD area could possibly get.
 
-Only WFD area, minimal DDF cadence.
+Only WFD area, minimal DDF cadence. pairs in same filter.
 
 ### Classic Baseline
 
@@ -30,12 +30,16 @@ Use a footprint that de-emphasizes the dusty plane of the galaxy. Use a rolling 
 
 ### DM Heavy
 
-A simulation that is inspired by DM requests:  Get DCR images, images of the whole sky in good seeing, large dithers for DDF fields.
+A simulation that is inspired by DM requests:  Get DCR images, images of the whole sky in good seeing, large dithers for DDF fields, rotator angle set to align spiders along rows and columns.
 
-## MW local group heavy
+##3 MW local group heavy
 
-Cover the bulge and LMC/SMC in depth.
+Cover the bulge, galactic anti-center and LMC/SMC in depth.
 
-## DDF heavy
+### DDF heavy
 
 Give as much time as possible to the DDF surveys
+
+### Solar System Heavy
+
+Slap extra gri all over the ecliptic maybe? Toss the SCP, and dial back the DDFs
