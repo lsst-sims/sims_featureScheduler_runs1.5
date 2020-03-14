@@ -3,3 +3,4 @@ python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers/barebones.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers/rolling_exgal.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers/dm_heavy.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers/ddf_heavy.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers

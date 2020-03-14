@@ -23,6 +23,19 @@ This is an intentionally "bad" simulation, where we only strive to meet the SRD 
 
 Only WFD area, minimal DDF cadence. pairs in same filter.
 
+This could be considered the "emergency strategy to meet SRD", e.g., we reach year 8 or 9 of the survey and project we will fall short of the SRD requirements, a strategy like this could be used to make sure we reach SRD values.
+
+Plusses: 
+
+* This meets SRD
+
+Minuses: 
+
+* No NES, so Solar System should suffer
+* No color info on pairs, so transients will suffer
+* No Galactic plane coverage, so no bulge science, and hard to ubercal the survey
+
+
 ### Classic Baseline
 
 The lastest iteration of our baseline survey. With 1 and 2 snaps per visit.
@@ -34,7 +47,7 @@ Use a footprint that de-emphasizes the dusty plane of the galaxy. Use a rolling 
 Should this include good seeing images?
 
 ### DM Heavy
-A simulation that is inspired by DM requests
+A simulation that is inspired by DM considerations
 
 * large dithers for DDF fields
 * rotator angle set to align spiders along rows and columns
