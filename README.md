@@ -60,7 +60,7 @@ Cover the bulge, galactic anti-center and LMC/SMC in depth.
 
 ### DDF heavy
 
-Give as much time as possible to the DDF surveys
+Give as much time as possible to the DDF surveys.  Looks like it might have hit the limit of what they can do running once per day? Can make sequences longer and/or extend seasons.
 
 ### Solar System Heavy
 
