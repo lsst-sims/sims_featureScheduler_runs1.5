@@ -48,9 +48,9 @@ def nes_footprint(nside=32):
     return result
 
 
-def big_sky_dust(nside=32, weights={'u': [0.31, 0.15, False], 'g': [0.44, 0.15, False],
-                 'r': [1., 0.3, False], 'i': [1., 0.3, False], 'z': [0.9, 0.3, False],
-                 'y': [0.9, 0.3, False]}, dust_limit=0.19):
+def big_sky_dust(nside=32, weights={'u': [0.31, 0.13, False], 'g': [0.44, 0.13, False],
+                 'r': [1., 0.25, False], 'i': [1., 0.25, False], 'z': [0.9, 0.25, False],
+                 'y': [0.9, 0.25, False]}, dust_limit=0.19):
     """
     Based on the Olsen et al Cadence White Paper
     """
