@@ -64,4 +64,4 @@ Give as much time as possible to the DDF surveys.  Looks like it might have hit 
 
 ### Solar System Heavy
 
-Slap extra gri all over the ecliptic maybe? Toss the SCP, and dial back the DDFs.  NEO survey at twilight.
+Slap extra gri all over the ecliptic maybe?   NEO survey at twilight.

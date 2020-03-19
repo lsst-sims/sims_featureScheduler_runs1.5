@@ -3,8 +3,7 @@ import matplotlib.pylab as plt
 import healpy as hp
 from lsst.sims.featureScheduler.modelObservatory import Model_observatory
 from lsst.sims.featureScheduler.schedulers import Core_scheduler, simple_filter_sched
-from lsst.sims.featureScheduler.utils import (standard_goals, NES_healpixels, create_season_offset,
-                                              ra_dec_hp_map, generate_goal_map)
+from lsst.sims.featureScheduler.utils import standard_goals, create_season_offset, ra_dec_hp_map
 import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (Greedy_survey,
                                                 Blob_survey)
@@ -16,41 +15,12 @@ import os
 import argparse
 from ddf_baseline import generate_dd_surveys
 
-from astropy.coordinates import SkyCoord
-from astropy import units as u
 from lsst.utils import getPackageDir
 
 
-def nes_footprint(nside=32):
-    """
-    A quick function to generate the "standard" goal maps. This is the traditional WFD/mini survey footprint.
-    """
-
-    weight_dict = {'u': 0, 'g': 0.2, 'r': 0.46, 'i': 0.46, 'z': 0.4, 'y': 0}
-    NES_min_EB = -30.0
-    NES_max_EB = 10.0
-    NES_dec_min = -20
-
-    ra, dec = ra_dec_hp_map(nside=nside)
-
-    coord = SkyCoord(ra=ra*u.rad, dec=dec*u.rad)
-    gal_lon, gal_lat = coord.galactic.l.deg, coord.galactic.b.deg
-
-    nes = NES_healpixels(nside=nside, min_EB=NES_min_EB, max_EB=NES_max_EB,
-                         dec_min=NES_dec_min)
-    nes_pix = np.where((nes > 0) & ((gal_lon > 90.) & (gal_lon < 270.)))[0]
-    ze = np.zeros(hp.nside2npix(nside), dtype=float)
-
-    result = {}
-    for key in weight_dict:
-        result[key] = ze + 0
-        result[key][nes_pix] = weight_dict[key]
-    return result
-
-
-def big_sky_dust(nside=32, weights={'u': [0.31, 0.13, False], 'g': [0.44, 0.13, False],
-                 'r': [1., 0.25, False], 'i': [1., 0.25, False], 'z': [0.9, 0.25, False],
-                 'y': [0.9, 0.25, False]}, dust_limit=0.19):
+def big_sky_dust(nside=32, weights={'u': [0.31, 0.15, False], 'g': [0.44, 0.15],
+                 'r': [1., 0.3], 'i': [1., 0.3], 'z': [0.9, 0.3],
+                 'y': [0.9, 0.3, False]}, dust_limit=0.19):
     """
     Based on the Olsen et al Cadence White Paper
     """
@@ -59,8 +29,8 @@ def big_sky_dust(nside=32, weights={'u': [0.31, 0.13, False], 'g': [0.44, 0.13, 
     filename = 'DustMaps/dust_nside_%i.npz' % nside
     dustmap = np.load(os.path.join(ebvDataDir, filename))['ebvMap']
 
-    # wfd covers -72.25 < dec < 12.4. Avoid galactic plane |b| > 15 deg
-    wfd_north = np.radians(12.4)
+    # wfd covers -72.25 < dec < 14.4. Avoid galactic plane |b| > 15 deg
+    wfd_north = np.radians(14.4)
     wfd_south = np.radians(-72.25)
     full_north = np.radians(30.)
 
@@ -83,12 +53,6 @@ def big_sky_dust(nside=32, weights={'u': [0.31, 0.13, False], 'g': [0.44, 0.13, 
         result[key][np.where(result[key] == 1e-6)] = weights[key][1]
         if len(weights[key]) == 3:
             result[key][np.where(dec > wfd_north)] = 0.
-
-    ## add in NES where it is less than WFD
-    nes_fp = nes_footprint(nside=nside)
-    for key in result:
-        nes_pix = np.where(nes_fp[key] > result[key])
-        result[key][nes_pix] = nes_fp[key][nes_pix]
 
     return result
 
