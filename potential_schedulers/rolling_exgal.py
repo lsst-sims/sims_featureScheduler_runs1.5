@@ -60,7 +60,9 @@ def big_sky_dust(nside=32, weights={'u': [0.31, 0.13, False], 'g': [0.44, 0.13],
     # wfd covers -72.25 < dec < 12.4. Avoid galactic plane |b| > 15 deg
     wfd_north = np.radians(12.4)
     wfd_south = np.radians(-72.25)
-    full_north = np.radians(30.)
+
+    # Set full north South, from +30 where that gets us a stripe up north
+    full_north = np.radians(12.)
 
     ra, dec = ra_dec_hp_map(nside=nside)
     total_map = np.zeros(ra.size)
