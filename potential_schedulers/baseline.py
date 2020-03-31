@@ -3,7 +3,7 @@ import matplotlib.pylab as plt
 import healpy as hp
 from lsst.sims.featureScheduler.modelObservatory import Model_observatory
 from lsst.sims.featureScheduler.schedulers import Core_scheduler, simple_filter_sched
-from lsst.sims.featureScheduler.utils import standard_goals, create_season_offset
+from lsst.sims.featureScheduler.utils import standard_goals, create_season_offset, generate_goal_map
 import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (Greedy_survey,
                                                 Blob_survey)
@@ -250,6 +250,42 @@ def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'g', 'r', 'i'
     return surveys
 
 
+def nes_light_footprints(nside=None):
+    """
+    A quick function to generate the "standard" goal maps. This is the traditional WFD/mini survey footprint.
+    """
+
+    NES_scaledown = 2.
+    SCP_scaledown = 1.5
+
+    result = {}
+    result['u'] = generate_goal_map(nside=nside, NES_fraction=0./NES_scaledown,
+                                    WFD_fraction=0.31, SCP_fraction=0.15/SCP_scaledown,
+                                    GP_fraction=0.15,
+                                    wfd_dec_min=-62.5, wfd_dec_max=3.6)
+    result['g'] = generate_goal_map(nside=nside, NES_fraction=0.2/NES_scaledown,
+                                    WFD_fraction=0.44, SCP_fraction=0.15/SCP_scaledown,
+                                    GP_fraction=0.15,
+                                    wfd_dec_min=-62.5, wfd_dec_max=3.6)
+    result['r'] = generate_goal_map(nside=nside, NES_fraction=0.46/NES_scaledown,
+                                    WFD_fraction=1.0, SCP_fraction=0.15/SCP_scaledown,
+                                    GP_fraction=0.15,
+                                    wfd_dec_min=-62.5, wfd_dec_max=3.6)
+    result['i'] = generate_goal_map(nside=nside, NES_fraction=0.46/NES_scaledown,
+                                    WFD_fraction=1.0, SCP_fraction=0.15/SCP_scaledown,
+                                    GP_fraction=0.15,
+                                    wfd_dec_min=-62.5, wfd_dec_max=3.6)
+    result['z'] = generate_goal_map(nside=nside, NES_fraction=0.4/NES_scaledown,
+                                    WFD_fraction=0.9, SCP_fraction=0.15/SCP_scaledown,
+                                    GP_fraction=0.15,
+                                    wfd_dec_min=-62.5, wfd_dec_max=3.6)
+    result['y'] = generate_goal_map(nside=nside, NES_fraction=0./NES_scaledown,
+                                    WFD_fraction=0.9, SCP_fraction=0.15/SCP_scaledown,
+                                    GP_fraction=0.15,
+                                    wfd_dec_min=-62.5, wfd_dec_max=3.6)
+    return result
+
+
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False,
               extra_info=None, illum_limit=40.):
     years = np.round(survey_length/365.25)
@@ -304,13 +340,18 @@ if __name__ == "__main__":
     fileroot = 'baseline_nexp%i_' % nexp
     file_end = 'v1.5_'
 
+    if nexp > 1:
+        footprints = nes_light_footprints(nside=nside)
+    else:
+        footprints = standard_goals(nside=nside)
+
     # Set up the DDF surveys to dither
     dither_detailer = detailers.Dither_detailer(per_night=per_night, max_dither=max_dither)
     details = [detailers.Camera_rot_detailer(min_rot=-camera_ddf_rot_limit, max_rot=camera_ddf_rot_limit), dither_detailer]
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp, detailers=details)
 
-    greedy = gen_greedy_surveys(nside, nexp=nexp)
-    blobs = generate_blobs(nside, nexp=nexp)
+    greedy = gen_greedy_surveys(nside, nexp=nexp, footprints=footprints)
+    blobs = generate_blobs(nside, nexp=nexp, footprints=footprints)
     surveys = [ddfs, blobs, greedy]
     run_sched(surveys, survey_length=survey_length, verbose=verbose,
               fileroot=os.path.join(outDir, fileroot+file_end), extra_info=extra_info,
