@@ -311,6 +311,8 @@ if __name__ == "__main__":
     parser.add_argument("--maxDither", type=float, default=0.7, help="Dither size for DDFs (deg)")
     parser.add_argument("--moon_illum_limit", type=float, default=40., help="illumination limit to remove u-band")
     parser.add_argument("--nexp", type=int, default=1)
+    parser.add_argument("--scale_down", dest='scale_down', action='store_true')
+    parser.set_defaults(scale_down=False)
 
     args = parser.parse_args()
     survey_length = args.survey_length  # Days
@@ -319,6 +321,7 @@ if __name__ == "__main__":
     max_dither = args.maxDither
     illum_limit = args.moon_illum_limit
     nexp = args.nexp
+    scale_down = args.scale_down
 
     nside = 32
     per_night = True  # Dither DDF per night
@@ -340,8 +343,9 @@ if __name__ == "__main__":
     fileroot = 'baseline_nexp%i_' % nexp
     file_end = 'v1.5_'
 
-    if nexp > 1:
+    if scale_down:
         footprints = nes_light_footprints(nside=nside)
+        fileroot = fileroot +'scaleddown_'
     else:
         footprints = standard_goals(nside=nside)
 
