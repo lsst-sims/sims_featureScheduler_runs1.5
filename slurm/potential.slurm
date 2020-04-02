@@ -48,6 +48,8 @@
 source /gscratch/astro/yoachim/lsst/loadLSST.bash
 setup sims_maps
 setup sims_featureScheduler -t $USER -t sims_w_2020_02
+setup sims_maf -t $USER -t sims_w_2020_02
+setup sims_maf_contrib -t $USER -t sims_w_2020_02
 
 
 cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/slurm
@@ -56,3 +58,7 @@ cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/slurm
 module load parallel-20170722
 ## only need to do 5 at a time, since there are only that many in the list
 cat run_potential.script | parallel -j 20
+
+# Let's run the MAF stuff too
+cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/potential_schedulers
+cat run_sci_pot.script | parallel -j 20
