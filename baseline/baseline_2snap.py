@@ -297,7 +297,7 @@ if __name__ == "__main__":
 
     extra_info['file executed'] = os.path.realpath(__file__)
 
-    fileroot = 'baseline_2snaps'
+    fileroot = 'baseline_2snaps_'
     file_end = 'v1.5_'
 
     # Set up the DDF surveys to dither
