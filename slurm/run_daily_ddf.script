@@ -1,0 +1,1 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/daily_ddf/ddf_surveys.py  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/daily_ddf
