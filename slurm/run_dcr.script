@@ -1,3 +1,6 @@
-python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --filters ug --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
-python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --filters ugr --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
-python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --filters ugri --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --nham 1 --filters ug --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --nham 1 --filters ugr --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --nham 1 --filters ugri --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --nham 2 --filters ug --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --nham 2 --filters ugr --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr/dcr.py --nham 2 --filters ugri --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/dcr
