@@ -97,8 +97,8 @@ def gen_greedy_surveys(nside=32, nexp=1, exptime=30., filters=['r', 'i', 'z', 'y
     return surveys
 
 
-def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'u', 'g', 'r', 'i', 'z', 'y'],
-                   filter2s=['u', 'g', 'r', 'r', 'i', 'z', 'y', 'y'], pair_time=22.,
+def generate_blobs(nside, nexp=1, exptime=30., filter1s=['u', 'u', 'g', 'r', 'i', 'z', 'y'],
+                   filter2s=['g', 'r', 'r', 'i', 'z', 'y', 'y'], pair_time=22.,
                    camera_rot_limits=[-80., 80.], n_obs_template=3,
                    season=300., season_start_hour=-4., season_end_hour=2.,
                    shadow_minutes=60., max_alt=76., moon_distance=30., ignore_obs='DD',
@@ -297,7 +297,7 @@ def generate_high_am(nside, nexp=1, n_high_am=2, hair_weight=6., pair_time=22.,
 
 
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False,
-              extra_info=None, illum_limit=15.):
+              extra_info=None, illum_limit=40.):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -319,7 +319,7 @@ if __name__ == "__main__":
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
     parser.add_argument("--maxDither", type=float, default=0.7, help="Dither size for DDFs (deg)")
-    parser.add_argument("--moon_illum_limit", type=float, default=15., help="illumination limit to remove u-band")
+    parser.add_argument("--moon_illum_limit", type=float, default=40., help="illumination limit to remove u-band")
     parser.add_argument("--nham", type=int, default=2)
     parser.add_argument("--filters", type=str, default='ug')
 
