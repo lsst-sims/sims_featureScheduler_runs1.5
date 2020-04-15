@@ -1,1 +1,2 @@
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/DDFs/agn_ddf.py  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/DDFs
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/DDFs/desc_ddf.py  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs1.5/DDFs
