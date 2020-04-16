@@ -46,6 +46,10 @@ Looking at different filter distributions (e.g., red or blue heavy footprints).
 
 Ensuring the entire sky has an image taken in good seeing conditions every year.
 
+## greedy_footprint
+
+Prevent the greedy survey at twilight from observing along the ecliptic. That should ensure the ecliptic is observed with blob pairs.
+
 ## rolling
 
 Various rolling cadence surveys.
