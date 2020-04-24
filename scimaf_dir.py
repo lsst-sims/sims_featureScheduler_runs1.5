@@ -30,7 +30,7 @@ if __name__ == "__main__":
             shutil.rmtree(name + '_sci')
         bdict = batches.scienceRadarBatch(runName=name)
         resultsDb = db.ResultsDb(outDir=name + '_sci')
-        group = mb.MetricBundleGroup(bdict, opsdb, outDir='name' + '_sci', resultsDb=resultsDb, saveEarly=False)
+        group = mb.MetricBundleGroup(bdict, opsdb, outDir=name + '_sci', resultsDb=resultsDb, saveEarly=False)
         group.runAll(clearMemory=True, plotNow=True)
         resultsDb.close()
         opsdb.close()
